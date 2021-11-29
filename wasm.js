@@ -65,7 +65,7 @@ const world_config = {
     width: 50,
     height: 50,
     seed: 0,
-    count: 1,
+    count: 10000,
 };
 
 const wasm_promise = loadWasm().then(wasm => {
