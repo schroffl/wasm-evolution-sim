@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+* {
+    box-sizing: border-box;
+}
+
+canvas, pre {
+    border: 1px solid black;
+
+    align-items: stretch;
+
+    flex-grow: 1;
+    flex-basis: 0;
+    width: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0px;
+    padding: 20px;
+}
+
+pre {
+    margin: 0px;
+    margin-left: 20px;
+    word-break: break-word;
+    white-space: pre-wrap;
+
+    padding: 8px;
+
+    flex-basis: 40%;
+    flex-grow: 0;
+
+    overflow-y: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #333;
+        color: #fefefe;
+    }
+
+    canvas, pre {
+        border-color: #fefefe;
+    }
+}
+        </style>
+    </head>
+    <body>
+        <script src="./wasm.js"></script>
+        <pre id="log_messages"></pre>
+    </body>
+</html>
