@@ -10,7 +10,7 @@ jobs:
         with:
           version: master
       - name: Build
-        run: "zig build -Drelease-fast && mkdir public && cp -R zig-out/ public/"
+        run: "zig build -Drelease-fast && mkdir public && cp -R zig-out public/"
       - name: Copy HTML & JS
         run: "cp index.html public/ && cp wasm.js public/"
       - name: Deploy to GitHub Pages
