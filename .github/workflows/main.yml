@@ -1,0 +1,28 @@
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  publish-html:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v1.3.0
+        with:
+          version: master
+      - name: Build
+        run: "zig build -Drelease-fast && mkdir public && cp -R zig-out/ public/"
+      - name: Copy HTML & JS
+        run: "cp index.html public/ && cp wasm.js public/"
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: public
+          allow_empty_commit: false
+          committer_name: github-actions
+          committer_email: ""
+          commit_message: "Deploy browser build to GitHub Pages"
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
