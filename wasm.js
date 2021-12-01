@@ -318,6 +318,17 @@ Promise.all([wasm_promise, tex_promise]).then(result => {
         const written = wasm.instance.exports.serializeWorld(buf, buf_len);
         const result = deref(DataView, wasm.instance, buf, written);
 
+        cam.x += cam_velocity.x;
+        cam.y += cam_velocity.y;
+
+        cam.x = Math.max(0, Math.min(cam.x, world_config.width));
+        cam.y = Math.max(0, Math.min(cam.y, world_config.height));
+
+        if (!current_drag) {
+            cam_velocity.x *= 0.93;
+            cam_velocity.y *= 0.93;
+        }
+
         render(result, cam);
 
         if (!window.paused) {
@@ -357,4 +368,42 @@ canvas.addEventListener('wheel', e => {
 
     cam.size += e.deltaY ;
     cam.size = Math.max(10, Math.min(cam.size, max));
+});
+
+let current_drag = undefined;
+let cam_velocity = {
+    x: 0,
+    y: 0,
+};
+
+canvas.addEventListener('pointerdown', e => {
+    canvas.style.cursor = 'grabbing';
+    current_drag = {
+        x: e.x,
+        y: e.y,
+    };
+
+    cam_velocity.x = cam_velocity.y = 0;
+});
+
+canvas.addEventListener('pointerup', e => {
+    canvas.style.cursor = '';
+    current_drag = undefined;
+});
+
+canvas.addEventListener('pointermove', e => {
+    if (!current_drag)
+        return;
+
+    const diff_x = e.x - current_drag.x;
+    const diff_y = e.y - current_drag.y;
+
+    const min_size = 10;
+    const max_size = Math.max(world_config.width, world_config.height);
+
+    const zoom = (cam.size - min_size) / (max_size - min_size);
+    const speed = zoom * 0.9 + 0.1;
+
+    cam_velocity.x = diff_x * 0.01 * speed;
+    cam_velocity.y = diff_y * 0.01 * speed;
 });
